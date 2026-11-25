@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1B2A4A">
+  <meta name="description" content="Katalog link produk Shopee kurasi pilihan dari @bestfindsidr. Cari cepat berdasarkan kode produk atau nama produk.">
+  <title>@bestfindsidr — Katalog Produk Kurasi</title>
+  <style>
+    :root {
+      --navy: #1B2A4A;
+      --navy-dark: #111C33;
+      --gold: #D4AF37;
+      --gold-soft: #FDF6DF;
+      --shopee: #EE4D2D;
+      --shopee-hover: #D73211;
+      --bg: #F4F6FA;
+      --surface: #FFFFFF;
+      --text: #162033;
+      --muted: #5C6B82;
+      --border: #E2E8F0;
+      --shadow: 0 6px 20px rgba(27, 42, 74, 0.08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    .hero {
+      background: linear-gradient(145deg, var(--navy) 0%, var(--navy-dark) 100%);
+      color: #FFFFFF;
+      padding: 26px 18px 22px;
+      text-align: center;
+      border-bottom: 3px solid var(--gold);
+    }
+
+    .avatar-ring {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      background: linear-gradient(135deg, var(--gold), #F5D97E);
+      color: var(--navy-dark);
+      font-weight: 800;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+      letter-spacing: -0.5px;
+    }
+
+    .hero-handle {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .hero-tagline {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #D6DFEE;
+    }
+
+    .hero-count {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(212, 175, 55, 0.16);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: #F7DF8D;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .search-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(244, 246, 250, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      font-size: 15px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 40px 0 40px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--shopee);
+      box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.14);
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 10px;
+      width: 26px;
+      height: 26px;
+      border: none;
+      border-radius: 50%;
+      background: #E2E8F0;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clear-btn.visible {
+      display: flex;
+    }
+
+    .search-meta {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 14px 16px 28px;
+    }
+
+    .product-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.15s ease;
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .card-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: #E9EEF5;
+      overflow: hidden;
+    }
+
+    .card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-media img.img-broken {
+      opacity: 0;
+    }
+
+    .code-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--navy);
+      color: var(--gold);
+      border: 1.5px solid var(--gold);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      box-shadow: 0 4px 12px rgba(17, 28, 51, 0.35);
+    }
+
+    .card-body {
+      padding: 14px 16px 16px;
+    }
+
+    .card-meta {
+      margin-bottom: 6px;
+    }
+
+    .code-pill {
+      display: inline-block;
+      background: var(--gold-soft);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .card-price {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .shopee-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      background: var(--shopee);
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+      box-shadow: 0 4px 12px rgba(238, 77, 45, 0.28);
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .shopee-btn:hover,
+    .shopee-btn:focus-visible {
+      background: var(--shopee-hover);
+    }
+
+    .shopee-btn:active {
+      transform: scale(0.99);
+    }
+
+    .placeholder-state,
+    .empty-state {
+      background: var(--surface);
+      border: 1px dashed #CBD5E1;
+      border-radius: var(--radius);
+      padding: 38px 22px;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .placeholder-icon,
+    .empty-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .placeholder-title,
+    .empty-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .placeholder-desc,
+    .empty-desc {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .reset-btn {
+      margin-top: 16px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      background: var(--navy);
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 16px 16px 26px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="avatar-ring" aria-hidden="true">BF</div>
+      <h1 class="hero-handle">@bestfindsidr</h1>
+      <p class="hero-tagline">Kurasi produk Shopee paling worth it &amp; terpercaya</p>
+      <span class="hero-count">1 produk kurasi pilihan</span>
+    </header>
+
+    <div class="search-sticky">
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input
+          id="searchInput"
+          class="search-input"
+          type="search"
+          placeholder="Cari kode (misal BF-001) atau nama produk..."
+          autocomplete="off"
+          aria-label="Cari produk berdasarkan kode atau nama"
+        >
+        <button id="clearBtn" class="clear-btn" type="button" aria-label="Hapus pencarian">&times;</button>
+      </div>
+      <div class="search-meta">
+        <span>Ketik kode dari caption IG/Threads</span>
+        <span id="resultCount">1 item</span>
+      </div>
+    </div>
+
+    <main class="main-content">
+    <section class="product-list" id="productList" aria-label="Daftar Produk Kurasi">
+      <article class="card" data-search="bf-001 guyur jas hujan setelan kangaroo">
+        <div class="card-media">
+          <img src="https://i.ibb.co.com/fz4q4m52/1-Guyur-Pink.jpg" alt="GUYUR Jas Hujan Setelan Kangaroo" loading="lazy" decoding="async" onerror="this.classList.add('img-broken');this.removeAttribute('src');">
+          <span class="code-badge">BF-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="code-pill">Kode: BF-001</span>
+          </div>
+          <h2 class="card-title">GUYUR Jas Hujan Setelan Kangaroo</h2>
+          <p class="card-price">Rp139.000 - Water repellent dan windproof, Atasan dapat dipakai sebagai jaket se</p>
+          <a class="shopee-btn" href="https://s.shopee.co.id/2BGhUJC2Tn" target="_blank" rel="noopener noreferrer">
+            Beli di Shopee &rarr;
+          </a>
+        </div>
+      </article>
+    </section>
+    <div class="empty-state hidden" id="noResults" role="status">
+      <div class="empty-icon" aria-hidden="true">🔎</div>
+      <h2 class="empty-title">Produk tidak ditemukan</h2>
+      <p class="empty-desc">Coba cek lagi kode produk (contoh: <strong>BF-001</strong>) atau ketik kata kunci lain.</p>
+      <button type="button" class="reset-btn" id="resetSearchBtn">Tampilkan Semua Produk</button>
+    </div>
+    </main>
+
+    <footer class="footer">
+      <p>BestFindsID (@bestfindsidr) &bull; Diperbarui 25 Nov 2026, 10:40 WITA</p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var input = document.getElementById("searchInput");
+      var clearBtn = document.getElementById("clearBtn");
+      var resetBtn = document.getElementById("resetSearchBtn");
+      var resultCount = document.getElementById("resultCount");
+      var noResults = document.getElementById("noResults");
+      var cards = Array.prototype.slice.call(document.querySelectorAll(".card"));
+
+      function applyFilter() {
+        var query = (input ? input.value : "").trim().toLowerCase();
+        if (clearBtn) {
+          clearBtn.classList.toggle("visible", query.length > 0);
+        }
+
+        var visible = 0;
+        cards.forEach(function (card) {
+          var haystack = card.getAttribute("data-search") || "";
+          var match = !query || haystack.indexOf(query) !== -1;
+          card.classList.toggle("hidden", !match);
+          if (match) visible += 1;
+        });
+
+        if (resultCount) {
+          resultCount.textContent = visible + " item";
+        }
+        if (noResults) {
+          noResults.classList.toggle("hidden", cards.length === 0 || visible > 0);
+        }
+      }
+
+      if (input) {
+        input.addEventListener("input", applyFilter);
+      }
+      if (clearBtn) {
+        clearBtn.addEventListener("click", function () {
+          input.value = "";
+          applyFilter();
+          input.focus();
+        });
+      }
+      if (resetBtn) {
+        resetBtn.addEventListener("click", function () {
+          input.value = "";
+          applyFilter();
+          input.focus();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
